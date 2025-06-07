@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import ModalAddTag from './components/ModalAddTag';
 import Todos from './components/Todos';
 import './styles/App.css';
 
@@ -8,6 +9,8 @@ function App() {
   const [description, setDescription] = useState('');
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
+
+  const [modalAddTag, setModalAddTag] = useState(null);
 
   const setSelectedTodo = (selectedTodo) => {
     if (todo === selectedTodo) {
@@ -70,6 +73,10 @@ function App() {
     getTodos();
   }, []);
 
+  useEffect(() => {
+    if (!modalAddTag) getTodos();
+  }, [modalAddTag]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -88,6 +95,7 @@ function App() {
         deleteTodo={deleteTodo}
         modifyStatusTodo={modifyStatusTodo}
         setSelectedTodo={setSelectedTodo}
+        setModalAddTag={setModalAddTag}
         setTodo={setTodo}
         getTodos={getTodos}
       />
@@ -118,6 +126,14 @@ function App() {
           {todo ? 'Alterar tarefa' : 'Adicionar tarefa'}
         </button>
       </form>
+
+      {modalAddTag && (
+        <ModalAddTag
+          todo={todo}
+          getTodos={getTodos}
+          setModalAddTag={setModalAddTag}
+        />
+      )}
     </main>
   );
 }
