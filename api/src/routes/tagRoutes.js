@@ -133,4 +133,69 @@ tagRoutes.delete('/tags/:id', async (request, response) => {
   }
 });
 
+tagRoutes.post('/tag-todos', async (request, response) => {
+  try {
+    const { tagId, todoId } = request.body;
+
+    if (!tagId || !todoId)
+      return handleError(response, 400, 'Both tagId and todoId are required');
+
+    const tag = await prisma.tag.findUnique({ where: { id: tagId } });
+    if (!tag) return handleError(response, 404, 'Tag not found');
+
+    const todo = await prisma.todo.findUnique({ where: { id: todoId } });
+    if (!todo) return handleError(response, 404, 'Todo not found');
+
+    const existingTagTodo = await prisma.tagTodo.findFirst({
+      where: { tagId: tag.id, todoId: todo.id }
+    });
+
+    if (existingTagTodo)
+      return handleError(response, 409, 'TagTodo relation already exists');
+
+    const tagTodo = await prisma.tagTodo.create({
+      data: {
+        todo: { connect: { id: todoId } },
+        tag: { connect: { id: tagId } }
+      }
+    });
+
+    return response.status(201).json(tagTodo);
+  } catch (error) {
+    console.error(error);
+    return handleError(response, 500, 'Internal Server Error');
+  }
+});
+
+tagRoutes.delete('/tag-todos/:tagId/:todoId', async (request, response) => {
+  try {
+    const { tagId, todoId } = request.params;
+
+    if (!tagId || !todoId)
+      return handleError(response, 400, 'Both tagId and todoId are required');
+
+    const tag = await prisma.tag.findUnique({ where: { id: parseInt(tagId) } });
+    if (!tag) return handleError(response, 404, 'Tag not found');
+
+    const todo = await prisma.todo.findUnique({
+      where: { id: parseInt(todoId) }
+    });
+    if (!todo) return handleError(response, 404, 'Todo not found');
+
+    const existingTagTodo = await prisma.tagTodo.findFirst({
+      where: { tagId: tag.id, todoId: todo.id }
+    });
+
+    if (existingTagTodo) {
+      await prisma.tagTodo.delete({ where: { id: existingTagTodo.id } });
+      return response.status(200).json('TagTodo relation deleted');
+    }
+
+    return handleError(response, 404, 'TagTodo relation not found');
+  } catch (error) {
+    console.error(error);
+    return handleError(response, 500, 'Internal Server Error');
+  }
+});
+
 module.exports = tagRoutes;
