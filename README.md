@@ -47,3 +47,15 @@ No outro terminal rode os seguintes comandos:
 > npm run dev
 
 Para abrir o projeto no seu navegador, basta entrar nesta url: http://localhost:5173/
+
+### Estrutura Básica do Projeto:
+
+.
+├── backend
+│ ├── src
+│ ├── prisma
+│ └── package.json
+├── frontend
+│ ├── src
+│ └── package.json
+└── README.md
