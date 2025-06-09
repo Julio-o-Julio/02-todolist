@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const todoRoutes = require('./routes/todoRoutes');
 const tagRoutes = require('./routes/tagRoutes');
+
+// Rota para exibir registros de operações feitas no sistema
 const logRoutes = require('./routes/logRoutes');
 
 const app = express();
