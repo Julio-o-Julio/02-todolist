@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+
+// criação/edição/remoção de tags
 import ModalAddTag from './components/ModalAddTag';
 import Todos from './components/Todos';
 import './styles/App.css';
