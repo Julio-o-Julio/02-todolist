@@ -1,3 +1,5 @@
+import SpanTags from './SpanTags';
+
 const Todos = ({
   todos,
   deleteTodo,

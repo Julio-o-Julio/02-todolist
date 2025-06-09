@@ -29,6 +29,14 @@ todoRoutes.post('/todos', async (request, response) => {
       data: { name, description }
     });
 
+    await prisma.log.create({
+      data: {
+        table_name: 'Todo',
+        action: 'CREATE',
+        record_id: todo.id
+      }
+    });
+
     return response.status(201).json(todo);
   } catch (error) {
     console.error(error);
@@ -60,6 +68,14 @@ todoRoutes.put('/todos', async (request, response) => {
       data: { name, status, description }
     });
 
+    await prisma.log.create({
+      data: {
+        table_name: 'Todo',
+        action: 'UPDATE',
+        record_id: id
+      }
+    });
+
     return response.status(200).json(alterTodo);
   } catch (error) {
     console.error(error);
@@ -77,6 +93,14 @@ todoRoutes.delete('/todos/:id', async (request, response) => {
 
     await prisma.tagTodo.deleteMany({ where: { todoId: intId } });
     await prisma.todo.delete({ where: { id: intId } });
+
+    await prisma.log.create({
+      data: {
+        table_name: 'Todo',
+        action: 'DELETE',
+        record_id: intId
+      }
+    });
 
     return response.status(200).json({ success: 'Todo deleted' });
   } catch (error) {
