@@ -5,6 +5,9 @@ const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server up in route: ${PORT}`);
+
+  // Arrumado os bugs
+
   const endpoints = expressListEndpoints(app);
   console.table(endpoints);
 });
