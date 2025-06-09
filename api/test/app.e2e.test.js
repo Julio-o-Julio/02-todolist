@@ -36,6 +36,7 @@ describe('Teste CRUD todos (e2e)', () => {
     const novaTarefa = { name: 'Comprar pão' };
     const res = await request(app).post('/todos').send(novaTarefa);
     expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty('name');
     expect(res.body.name).toEqual(novaTarefa.name);
   });
 
