@@ -17,6 +17,14 @@ tagRoutes.post('/tags', async (request, response) => {
       data: { name, color }
     });
 
+    await prisma.log.create({
+      data: {
+        table_name: 'Tag',
+        action: 'CREATE',
+        record_id: tag.id
+      }
+    });
+
     if (todoId) {
       const tagTodo = await prisma.tagTodo.create({
         data: {
@@ -104,6 +112,14 @@ tagRoutes.put('/tags', async (request, response) => {
       data: { name, color: color || tag.color }
     });
 
+    await prisma.log.create({
+      data: {
+        table_name: 'Tag',
+        action: 'UPDATE',
+        record_id: id
+      }
+    });
+
     if (newTagTodo)
       return response.status(200).json({ updatedTag, newTagTodo });
     return response.status(200).json(updatedTag);
@@ -125,6 +141,14 @@ tagRoutes.delete('/tags/:id', async (request, response) => {
 
     await prisma.tagTodo.deleteMany({ where: { tagId: intId } });
     await prisma.tag.delete({ where: { id: intId } });
+
+    await prisma.log.create({
+      data: {
+        table_name: 'Tag',
+        action: 'DELETE',
+        record_id: intId
+      }
+    });
 
     return response.status(200).json({ success: 'Tag deleted' });
   } catch (error) {
